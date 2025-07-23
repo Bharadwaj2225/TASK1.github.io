@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Edit Task{% endblock %}
+{% block content %}
+<h2>Edit Task</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label>Title</label>
+    <input type="text" name="title" class="form-control" value="{{ task.title }}" required>
+  </div>
+  <div class="mb-3">
+    <label>Description</label>
+    <textarea name="description" class="form-control">{{ task.description }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label>Due Date</label>
+    <input type="date" name="due_date" class="form-control" value="{{ task.due_date }}">
+  </div>
+  <div class="form-check mb-3">
+    <input type="checkbox" class="form-check-input" name="completed" {% if task.completed %}checked{% endif %}>
+    <label class="form-check-label">Completed</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Task</button>
+</form>
+{% endblock %}

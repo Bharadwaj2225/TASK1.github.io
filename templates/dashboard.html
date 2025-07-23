@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h2>Welcome, {{ current_user.username }}!</h2>
+
+  <h3>Your Tasks</h3>
+  <ul class="list-group mb-4">
+    {% for task in tasks %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ task.title }} - {% if task.completed %}<span class="text-success">Completed</span>{% else %}<span class="text-danger">Pending</span>{% endif %}
+        </span>
+        <div>
+          <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn btn-sm btn-outline-danger">Delete</a>
+          <a href="{{ url_for('start_timer', task_id=task.id) }}" class="btn btn-sm btn-outline-success">Start</a>
+          <a href="{{ url_for('stop_timer', task_id=task.id) }}" class="btn btn-sm btn-outline-warning">Stop</a>
+          <a href="{{ url_for('view_logs', task_id=task.id) }}" class="btn btn-sm btn-outline-info">Logs</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h3>Time Spent on Tasks</h3>
+  <canvas id="timeChart" width="400" height="200"></canvas>
+
+  <h3 class="mt-4">Task Status</h3>
+  <canvas id="statusChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Bar Chart: Time Spent per Task -->
+<script>
+  const timeCtx = document.getElementById('timeChart').getContext('2d');
+  new Chart(timeCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ task_names | tojson }},
+      datasets: [{
+        label: 'Hours Spent',
+        data: {{ task_durations | tojson }},
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Hours' }
+        }
+      }
+    }
+  });
+</script>
+
+<!-- Pie Chart: Completed vs Pending -->
+<script>
+  const statusCtx = document.getElementById('statusChart').getContext('2d');
+  new Chart(statusCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Completed', 'Pending'],
+      datasets: [{
+        data: [{{ completed_count }}, {{ pending_count }}],
+        backgroundColor: ['#28a745', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+</script>
+{% endblock %}

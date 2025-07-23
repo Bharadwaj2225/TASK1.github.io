@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Add Task{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4">Add New Task</h2>
+    <form method="POST">
+      <div class="mb-3">
+        <label for="title" class="form-label">Task Title</label>
+        <input type="text" id="title" name="title" class="form-control" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="description" class="form-label">Description (optional)</label>
+        <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+      </div>
+      
+      <div class="mb-3">
+        <label for="due_date" class="form-label">Due Date (optional)</label>
+        <input type="date" id="due_date" name="due_date" class="form-control">
+      </div>
+      
+      <button type="submit" class="btn btn-success">Add Task</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
